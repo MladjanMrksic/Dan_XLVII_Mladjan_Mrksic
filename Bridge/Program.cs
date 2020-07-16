@@ -58,12 +58,6 @@ namespace Bridge
                         Cars[i].T.Start(Cars[i]);
                         Cars.Remove(Cars[i]);
                     }
-                    //else if (Cars[i - 1].Direction == Cars[i].Direction)
-                    //{
-                    //    Console.WriteLine("Car " + Cars[i].OrderNumber + " is starting passage over the bridge in direction " + Cars[i].Direction + ".");
-                    //    Cars[i].T.Start(Cars[i]);
-                    //    Cars.Remove(Cars[i]);
-                    //}
                     else
                     {
                         Console.WriteLine("Car " + Cars[i].OrderNumber + " is waiting for safe passage over the bridge in direction " + Cars[i].Direction + ".");

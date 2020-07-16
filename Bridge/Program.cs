@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -22,6 +23,9 @@ namespace Bridge
 
         static void Main(string[] args)
         {
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
+            string CurrentDirection = null;
             List<Car> Cars = new List<Car>();
             List<Thread> Threads = new List<Thread>();
             Program p = new Program();
@@ -52,20 +56,38 @@ namespace Bridge
             {
                 for (int i = 0; i < Cars.Count; i++)
                 {
-                    if ((i == 0 && Cars[i].T.ThreadState.ToString() == "Unstarted") || (Cars[i - 1].Direction == Cars[i].Direction))
+                    if (Cars[i].T.ThreadState.ToString() == "Running")
                     {
-                        Console.WriteLine("Car " + Cars[i].OrderNumber + " is starting passage over the bridge in direction " + Cars[i].Direction + ".");
-                        Cars[i].T.Start(Cars[i]);
+                        continue;
+                    }
+                    else if (Cars[i].T.ThreadState.ToString() == "Stopped")
+                    {
                         Cars.Remove(Cars[i]);
                     }
-                    else
+                    else if (Cars[i].T.ThreadState.ToString() == "Unstarted")
                     {
-                        Console.WriteLine("Car " + Cars[i].OrderNumber + " is waiting for safe passage over the bridge in direction " + Cars[i].Direction + ".");
-                        Cars.Add(Cars[i]);
-                        Cars.Remove(Cars[i]);
+                        if (i == 0)
+                        {
+                            Cars[i].T.Start(Cars[i]);
+                            CurrentDirection = Cars[i].Direction;
+                            Console.WriteLine("Car " + Cars[i].OrderNumber + " is starting passage over the bridge in direction " + Cars[i].Direction + ".");
+                        }
+                        else if (CurrentDirection == Cars[i].Direction && Cars[i].T.ThreadState.ToString() == "Unstarted")
+                        {
+                            Cars[i].T.Start(Cars[i]);
+                            Console.WriteLine("Car " + Cars[i].OrderNumber + " is starting passage over the bridge in direction " + Cars[i].Direction + ".");
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Car " + Cars[i].OrderNumber + " is waiting for safe passage over the bridge in direction " + Cars[i].Direction + ".");
+                        }
                     }
                 }
             }
+            stopWatch.Stop();
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", stopWatch.Elapsed.Hours, stopWatch.Elapsed.Minutes, stopWatch.Elapsed.Seconds,stopWatch.Elapsed.Milliseconds / 10);
+            Console.WriteLine("Application run time " + elapsedTime);
             Console.ReadLine();
         }
 

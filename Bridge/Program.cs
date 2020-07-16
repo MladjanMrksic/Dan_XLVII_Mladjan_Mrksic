@@ -47,7 +47,31 @@ namespace Bridge
 
             }
             cd(Cars);
-
+            Console.WriteLine("*******************************************");
+            while (Cars.Count > 0)
+            {
+                for (int i = 0; i < Cars.Count; i++)
+                {
+                    if ((i == 0 && Cars[i].T.ThreadState.ToString() == "Unstarted") || (Cars[i - 1].Direction == Cars[i].Direction))
+                    {
+                        Console.WriteLine("Car " + Cars[i].OrderNumber + " is starting passage over the bridge in direction " + Cars[i].Direction + ".");
+                        Cars[i].T.Start(Cars[i]);
+                        Cars.Remove(Cars[i]);
+                    }
+                    //else if (Cars[i - 1].Direction == Cars[i].Direction)
+                    //{
+                    //    Console.WriteLine("Car " + Cars[i].OrderNumber + " is starting passage over the bridge in direction " + Cars[i].Direction + ".");
+                    //    Cars[i].T.Start(Cars[i]);
+                    //    Cars.Remove(Cars[i]);
+                    //}
+                    else
+                    {
+                        Console.WriteLine("Car " + Cars[i].OrderNumber + " is waiting for safe passage over the bridge in direction " + Cars[i].Direction + ".");
+                        Cars.Add(Cars[i]);
+                        Cars.Remove(Cars[i]);
+                    }
+                }
+            }
             Console.ReadLine();
         }
 
